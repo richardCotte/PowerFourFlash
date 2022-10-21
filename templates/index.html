@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-    <head>
-        <title>{{ title }}</title>
-    </head>
-    <body>
-        <h1>Hello {{ username }}</h1>
 
-        <h3>Ce site exploite un jeu de Puissance 4, vous permettant de jouer à 2 ou seul contre une IA et de vous comparer aux autres joueurs.</h3>
-    </body>
+<head>
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    <h1>PowerFourFlash</h1>
+    <p>Ce site exploite un jeu de Puissance 4, vous permettant de jouer à 2 ou seul contre une IA et de vous comparer
+        aux autres joueurs.</p>
+    {% if username == "": %}
+    <h4>Hello {{ username }}</h4>
+    <h3>JOUER</h3>
+    {% else %}
+    <a href="{{ url_for('login') }}">Connexion</a>
+    {% endif %}
+</body>
+
 </html>
