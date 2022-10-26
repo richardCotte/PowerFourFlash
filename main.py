@@ -22,20 +22,22 @@ def calculate_power_four_grid(table, chosen_column, playing_player_number):
         flash("Pick a number between 0 and 6 please")
 
 
-@app.route("/power_four")
-def power_four():
-    if 'grid' in session:
-        calculate_power_four_grid(session['grid'], 5, 1)
+@app.route("/power_four/<chosen_grid>")
+def power_four(chosen_grid):
+    if 'grid' and 'playing_player' in session:
+        calculate_power_four_grid(session['grid'], int(chosen_grid), session['playing_player'])
 
         # We are storing our grid in session, and we modify a list in a dictionary so the session doesn't see that
         # the session variable has been changed, so we need to 'force' update it
         session['grid'] = session['grid']
 
+        session['playing_player'] = 1 if session['playing_player'] == 2 else 2
+
         return render_template('power_four.html', grid=session['grid'])
     else:
+        session['playing_player'] = 1
         session['grid'] = [["."] * 7 for i in range(6)]
         return render_template('power_four.html', grid=session['grid'])
-
 
 
 @app.route("/")

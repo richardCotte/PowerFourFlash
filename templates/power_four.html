@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Power Four Game</title>
+    <link href="../static/power_four.css" rel="stylesheet">
 </head>
 <body>
-{% for line in grid %}
-{{ line }} <br>
+<table class="powerFourTable">
+{% for line in grid|reverse %}
+    <tr>
+    {% for char in line %}
+        <td class="powerFourSquare">
+        {% if char != "." %}
+            {{ char }}
+        {% else %}
+            {{ " " }}
+        {% endif %}
+        </td>
+    {% endfor %}
+    </tr>
 {% endfor %}
+</table>
 </body>
 </html>
