@@ -26,9 +26,10 @@ if not Path("database.db").exists() :
 @app.route("/")
 @app.route('/index')
 def index():
+    name =""
     return render_template('index.html', title='Accueil - vous êtes connecté', logo='PowerFourFlash', username=name)
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
     error = None
     if request.method == 'POST':
