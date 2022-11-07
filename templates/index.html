@@ -10,7 +10,7 @@
         aux autres joueurs.</p>
     {% if username != "": %}
     <h4>Hello {{ username }}</h4>
-    <h3>JOUER</h3>
+    <a href="{{ url_for('power_four') }}"><h3>JOUER</h3></a>
     {% else %}
     <a href="{{ url_for('login') }}">Connexion</a>
     {% endif %}
