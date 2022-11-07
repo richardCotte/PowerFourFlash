@@ -4,6 +4,8 @@ from flask import url_for
 from flask import render_template
 from flask import current_app, g
 from pathlib import Path
+from flask import redirect
+from flask import request
 import sqlite3
 
 app = Flask(__name__)
@@ -22,13 +24,28 @@ if not Path("database.db").exists() :
 
 
 @app.route("/")
+@app.route('/index')
 def index():
-    return "Index Page"
+    return render_template('index.html', title='Accueil - vous êtes connecté', logo='PowerFourFlash', username=name)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] != 'admin' or request.form['password'] != 'admin':
+            error = 'Identifiants incorrects. Réessayez.'
+        else:
+            return redirect(url_for('index'))
+    return render_template('login.html', title='Créer mon compte', error=error)
 
-@app.route("/test/")
-def test():
-    return "<p>Test !</p>"
+@app.route('/signup', methods =['GET', 'POST'])
+def signup():
+    msg = ''
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form :
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+    return render_template('signup.html', title='Créer mon compte')
 
 
 @app.route('/user/<username>')
@@ -39,3 +56,5 @@ def profile(username):
 with app.test_request_context():
     print(url_for('profile', username='John Doe'))
     print(url_for('index'))
+    print(url_for('login'))
+    print(url_for('signup'))
