@@ -27,7 +27,7 @@ def login():
             return redirect(url_for('index'))
     return render_template('login.html', title='Créer mon compte', error=error)
 
-@app.route('/signup' methods =['GET', 'POST'])
+@app.route('/signup', methods =['GET', 'POST'])
 def signup():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form :
