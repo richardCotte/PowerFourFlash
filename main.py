@@ -23,22 +23,66 @@ def calculate_power_four_grid(table, chosen_column, playing_player):
         return False
 
 
+def check_game_over(grid):
+    checked_count_hor = 0
+    checked_count_ver = 0
+    checked_square_ver = 0
+    for i in range(7):
+        for line in grid:
+            checked_square_hor = 0
+            for square in line:
+                if square == checked_square_hor and square != ".":
+                    checked_count_hor += 1
+                else:
+                    checked_count_hor = 0
+                if checked_count_hor == 3:
+                    return checked_square_hor
+                checked_square_hor = square
+            if checked_square_ver == line[i] and line[i] != ".":
+                checked_count_ver += 1
+            else:
+                checked_count_ver = 0
+            if checked_count_ver == 3:
+                return checked_square_ver
+            checked_square_ver = line[i]
+    return 0
+
+
+def check_game_over_diag(grid):
+    checked_count_diag = 0
+    checked_square_diag = 0
+    for i in range(3):
+        for j in range(4):
+            for line in grid:
+                if checked_square_diag == line[i+j] and line[i+j] != ".":
+                    checked_count_diag += 1
+                else:
+                    checked_count_diag = 0
+                if checked_count_diag == 3:
+                    return checked_square_diag
+                checked_square_diag = line[i+j]
+    return 0
+
+
+
 @app.route("/power_four/", methods=['POST', 'GET'])
 def power_four():
     if 'grid' not in session:
         session['grid'] = [["."] * 7 for i in range(6)]
-        session['playing_player'] = "X"
+        session['playing_player'] = 1
     if request.method == 'POST':
         chosen_grid = request.form['chosen_grid']
         if calculate_power_four_grid(session['grid'], int(chosen_grid), session['playing_player']):
-            session['playing_player'] = "X" if session['playing_player'] == "O" else "O"
+            session['playing_player'] = 1 if session['playing_player'] == 2 else 2
 
         # We are storing our grid in session, and we modify a list in a dictionary however the session doesn't see that
         # the session variable has been changed, so we need to 'force' update it
         session['grid'] = session['grid']
         return redirect(url_for('power_four'))
 
-    return render_template('power_four.html', grid=session['grid'], playing_player=session['playing_player'])
+    winner = check_game_over_diag(session['grid'])
+    return render_template('power_four.html', grid=session['grid'], playing_player=session['playing_player'],
+                           winner=winner)
 
 
 @app.route("/")
