@@ -21,5 +21,32 @@
     </tr>
 {% endfor %}
 </table>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li class="error">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+<h2>
+    C'est au joueur :
+</h2>
+{{ playing_player }}
+<label for="col_choice">
+    <h2>
+        Choisissez la colonne dans laquelle vous voulez rajouter votre pion :
+    </h2>
+</label>
+<form action="{{ url_for('power_four') }}" method="post">
+    <input type="submit" name="chosen_grid" value="0">
+    <input type="submit" name="chosen_grid" value="1">
+    <input type="submit" name="chosen_grid" value="2">
+    <input type="submit" name="chosen_grid" value="3">
+    <input type="submit" name="chosen_grid" value="4">
+    <input type="submit" name="chosen_grid" value="5">
+    <input type="submit" name="chosen_grid" value="6">
+</form>
 </body>
 </html>

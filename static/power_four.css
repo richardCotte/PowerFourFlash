@@ -9,3 +9,7 @@
     height: 50px;
     text-align: center;
 }
+
+.error {
+    color: #9C1A1C;
+}
