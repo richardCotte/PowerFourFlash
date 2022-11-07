@@ -11,6 +11,7 @@ from flask import redirect
 from flask import request
 import sqlite3
 
+
 app = Flask(__name__)
 
 app.secret_key = "b05c5dafc4a00a8b7548d8fb35e45c1a86553f4f233b15f2d211d1deade97df9"
@@ -85,7 +86,6 @@ def power_four():
         grid=session["grid"],
         playing_player=session["playing_player"],
     )
-
 
 @app.route("/")
 @app.route("/index")
