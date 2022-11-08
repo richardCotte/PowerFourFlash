@@ -58,7 +58,7 @@ def login_player():
         cur.execute(sqlRequest)
         rows = cur.fetchall()
         if dict(rows[0])["pass"] == str(password):
-            session["email"] = str(email)
+            session["email"] = email
             session["username"] = str(dict(rows[0])["pseudo"])
             return redirect(url_for("power_four"))
         else:
@@ -158,9 +158,38 @@ def power_four():
                            winner=winner)
 
 
+def update_score(win, email):
+    db = get_db()
+    cur = db.cursor()
+    sqlRequest = "UPDATE scoreboard SET win = %s WHERE emailPlayer = '%s'" % (int(win), str(email))
+    cur.execute(sqlRequest)
+
 @app.route("/finish_game/", methods=['POST'])
 def finish_game():
-    return request.form['finish_button']
+    typeWinner = str(request.form['finish_button'])
+    if typeWinner == '1':
+        email = session["email"]
+        db = get_db()
+        cur = db.cursor()
+        sqlRequest = "SELECT win FROM scoreboard WHERE emailPlayer = '%s'" % (str(email))
+        cur.execute(sqlRequest)
+        rows = cur.fetchall()
+        win = int(dict(rows[0])["win"])
+        win += 1
+        update_score(win, email)
+    return redirect(url_for("index"))
+
+
+@app.route("/scoreboard")
+def scoreboard():
+    db = get_db()
+    cur = db.cursor()
+    sqlRequest = "SELECT p.pseudo, s.win FROM player p INNER JOIN scoreboard s ON p.email = s.emailPlayer ORDER BY s.win DESC"
+    cur.execute(sqlRequest)
+    rows = cur.fetchall()
+    return render_template(
+        "scoreboard.html", title="Scoreboard", logo="PowerFourFlash", score=rows
+    )
 
 
 @app.route("/")
