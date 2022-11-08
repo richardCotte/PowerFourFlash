@@ -1,12 +1,9 @@
 import random
-from importlib.resources import path
-from flask import Flask, redirect
+from flask import Flask
 from flask import url_for
 from flask import flash
 from flask import session
 from flask import render_template
-from flask import request
-from flask import current_app, g
 from pathlib import Path
 from flask import redirect
 from flask import request
@@ -35,11 +32,12 @@ def sinup_player():
     if len(username) > 0 and len(email) > 0 and len(password) > 0:
         db = get_db()
         cur = db.cursor()
-        sqlRequest = "INSERT INTO player (email, pseudo, pass) VALUES ('%s', '%s', '%s')" % (str(email), str(username), str(password))
-        cur.execute(sqlRequest)
+        sql_request = "INSERT INTO player (email, pseudo, pass) VALUES ('%s', '%s', '%s')" % (
+            str(email), str(username), str(password))
+        cur.execute(sql_request)
         db.commit()
-        sqlRequest = "INSERT INTO scoreboard (emailPlayer, win) VALUES ('%s', %s)" % (str(email), 0)
-        cur.execute(sqlRequest)
+        sql_request = "INSERT INTO scoreboard (emailPlayer, win) VALUES ('%s', %s)" % (str(email), 0)
+        cur.execute(sql_request)
         db.commit()
         return redirect(url_for("login"))
     else:
@@ -53,8 +51,8 @@ def login_player():
     if len(email) > 0 and len(password) > 0:
         db = get_db()
         cur = db.cursor()
-        sqlRequest = "SELECT * FROM player WHERE email = '%s'" % (str(email))
-        cur.execute(sqlRequest)
+        sql_request = "SELECT * FROM player WHERE email = '%s'" % (str(email))
+        cur.execute(sql_request)
         rows = cur.fetchall()
         if dict(rows[0])["pass"] == str(password):
             session["email"] = email
@@ -164,6 +162,7 @@ def update_score(win, email):
     cur.execute(sql_request)
     db.commit()
 
+
 @app.route("/finish_game/", methods=['POST'])
 def finish_game():
     type_winner = str(request.form['finish_button'])
@@ -184,7 +183,8 @@ def finish_game():
 def scoreboard():
     db = get_db()
     cur = db.cursor()
-    sql_request = "SELECT p.pseudo, s.win FROM player p INNER JOIN scoreboard s ON p.email = s.emailPlayer ORDER BY s.win DESC"
+    sql_request = "SELECT p.pseudo, s.win FROM player p INNER JOIN scoreboard s ON p.email = s.emailPlayer ORDER BY " \
+                  "s.win DESC "
     cur.execute(sql_request)
     rows = cur.fetchall()
     return render_template(
