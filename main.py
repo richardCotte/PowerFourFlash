@@ -32,11 +32,16 @@ def sinup_player():
     if len(username) > 0 and len(email) > 0 and len(password) > 0:
         db = get_db()
         cur = db.cursor()
-        sql_request = "INSERT INTO player (email, pseudo, pass) VALUES ('%s', '%s', '%s')" % (
-            str(email), str(username), str(password))
+        sql_request = (
+            "INSERT INTO player (email, pseudo, pass) VALUES ('%s', '%s', '%s')"
+            % (str(email), str(username), str(password))
+        )
         cur.execute(sql_request)
         db.commit()
-        sql_request = "INSERT INTO scoreboard (emailPlayer, win) VALUES ('%s', %s)" % (str(email), 0)
+        sql_request = "INSERT INTO scoreboard (emailPlayer, win) VALUES ('%s', %s)" % (
+            str(email),
+            0,
+        )
         cur.execute(sql_request)
         db.commit()
         return redirect(url_for("login"))
@@ -113,7 +118,10 @@ def check_game_over(grid):
             checked_count_diag = 0
             checked_square_diag = 0
             for j in range(4):
-                if checked_square_diag == grid[j + y][j + i] and grid[j + y][j + i] != ".":
+                if (
+                    checked_square_diag == grid[j + y][j + i]
+                    and grid[j + y][j + i] != "."
+                ):
                     checked_count_diag += 1
                 else:
                     checked_count_diag = 0
@@ -126,7 +134,10 @@ def check_game_over(grid):
             checked_count_diag = 0
             checked_square_diag = 0
             for j in range(4):
-                if checked_square_diag == grid[j + y][i - j] and grid[j + y][i - j] != ".":
+                if (
+                    checked_square_diag == grid[j + y][i - j]
+                    and grid[j + y][i - j] != "."
+                ):
                     checked_count_diag += 1
                 else:
                     checked_count_diag = 0
@@ -138,48 +149,63 @@ def check_game_over(grid):
 
 @app.route("/power_four/", methods=["POST", "GET"])
 def power_four():
-    if 'grid' not in session:
-        session['grid'] = [["."] * 7 for i in range(6)]
-        session['playing_player'] = 1
-    if request.method == 'POST':
-        chosen_grid = request.form['chosen_grid'] if session['playing_player'] == 1 else random.randint(0, 6)
-        if calculate_power_four_grid(session['grid'], int(chosen_grid), session['playing_player']):
-            session['playing_player'] = 1 if session['playing_player'] == 2 else 2
+    if "grid" not in session:
+        session["grid"] = [["."] * 7 for i in range(6)]
+        session["playing_player"] = 1
+    if request.method == "POST":
+        chosen_grid = (
+            request.form["chosen_grid"]
+            if session["playing_player"] == 1
+            else random.randint(0, 6)
+        )
+        if calculate_power_four_grid(
+            session["grid"], int(chosen_grid), session["playing_player"]
+        ):
+            session["playing_player"] = 1 if session["playing_player"] == 2 else 2
 
         # We are storing our grid in session, and we modify a list in a dictionary however the session doesn't see that
         # the session variable has been changed, so we need to 'force' update it
-        session['grid'] = session['grid']
-        return redirect(url_for('power_four'))
+        session["grid"] = session["grid"]
+        return redirect(url_for("power_four"))
 
-    winner = check_game_over(session['grid'])
-    return render_template('power_four.html', grid=session['grid'], playing_player=session['playing_player'],
-                           winner=winner)
+    winner = check_game_over(session["grid"])
+    return render_template(
+        "power_four.html",
+        grid=session["grid"],
+        playing_player=session["playing_player"],
+        winner=winner,
+    )
 
 
 def update_score(win, email):
     db = get_db()
     cur = db.cursor()
-    sql_request = "UPDATE scoreboard SET win = %s WHERE emailPlayer = '%s'" % (int(win), str(email))
+    sql_request = "UPDATE scoreboard SET win = %s WHERE emailPlayer = '%s'" % (
+        int(win),
+        str(email),
+    )
     cur.execute(sql_request)
     db.commit()
 
 
-@app.route("/finish_game/", methods=['POST'])
+@app.route("/finish_game/", methods=["POST"])
 def finish_game():
-    type_winner = str(request.form['finish_button'])
-    if type_winner == '1':
+    type_winner = str(request.form["finish_button"])
+    if type_winner == "1":
         email = session["email"]
         db = get_db()
         cur = db.cursor()
-        sql_request = "SELECT win FROM scoreboard WHERE emailPlayer = '%s'" % (str(email))
+        sql_request = "SELECT win FROM scoreboard WHERE emailPlayer = '%s'" % (
+            str(email)
+        )
         cur.execute(sql_request)
         rows = cur.fetchall()
         win = int(dict(rows[0])["win"])
         win += 1
         update_score(win, email)
-    if 'grid' or 'playing_player' in session:
-        session.pop('grid')
-        session.pop('playing_player')
+    if "grid" or "playing_player" in session:
+        session.pop("grid")
+        session.pop("playing_player")
     return redirect(url_for("index"))
 
 
@@ -187,8 +213,10 @@ def finish_game():
 def scoreboard():
     db = get_db()
     cur = db.cursor()
-    sql_request = "SELECT p.pseudo, s.win FROM player p INNER JOIN scoreboard s ON p.email = s.emailPlayer ORDER BY " \
-                  "s.win DESC "
+    sql_request = (
+        "SELECT p.pseudo, s.win FROM player p INNER JOIN scoreboard s ON p.email = s.emailPlayer ORDER BY "
+        "s.win DESC "
+    )
     cur.execute(sql_request)
     rows = cur.fetchall()
     return render_template(
