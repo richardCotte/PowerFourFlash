@@ -58,7 +58,7 @@ def login_player():
             if dict(rows[0])["pass"] == str(password):
                 session["email"] = email
                 session["username"] = str(dict(rows[0])["pseudo"])
-                return redirect(url_for("power_four"))
+                return redirect(url_for("index"))
         except:
             return redirect(url_for("error"))
     else:
@@ -199,9 +199,11 @@ def scoreboard():
 @app.route("/")
 @app.route("/index")
 def index():
-    name = ""
+    user = ""
+    if "email" in session:
+        user = session["username"]
     return render_template(
-        "index.html", title="Accueil", logo="PowerFourFlash", username=name
+        "index.html", title="Accueil", logo="PowerFourFlash", user=user
     )
 
 
