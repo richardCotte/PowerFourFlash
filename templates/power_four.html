@@ -29,14 +29,17 @@
 </table>
 {% if winner != 0 %}
     <h1>
-    Le joueur
-    {% if winner == 1 %}
-        {{ player1Mark }}
-    {% elif winner == 2 %}
-        {{ player2Mark }}
-    {% endif %}
-    à gagné
+        Le joueur
+        {% if winner == 1 %}
+            {{ player1Mark }}
+        {% elif winner == 2 %}
+            {{ player2Mark }}
+        {% endif %}
+        à gagné
     </h1>
+    <form action="{{ url_for('finish_game') }}" method="post" name="finish_game">
+        <button type="submit" name="finish_button" value={{ winner }}>End The Game</button>
+    </form>
 {% endif %}
 {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -63,13 +66,13 @@
             </h2>
         </label>
         <form action="{{ url_for('power_four') }}" method="post" name="col_choice">
-            <input type="submit" name="chosen_grid" value="0">
-            <input type="submit" name="chosen_grid" value="1">
-            <input type="submit" name="chosen_grid" value="2">
-            <input type="submit" name="chosen_grid" value="3">
-            <input type="submit" name="chosen_grid" value="4">
-            <input type="submit" name="chosen_grid" value="5">
-            <input type="submit" name="chosen_grid" value="6">
+            <button type="submit" name="chosen_grid" value="0">1</button>
+            <button type="submit" name="chosen_grid" value="1">2</button>
+            <button type="submit" name="chosen_grid" value="2">3</button>
+            <button type="submit" name="chosen_grid" value="3">4</button>
+            <button type="submit" name="chosen_grid" value="4">5</button>
+            <button type="submit" name="chosen_grid" value="5">6</button>
+            <button type="submit" name="chosen_grid" value="6">7</button>
         </form>
     {% elif playing_player == 2 %}
         <label for="ia_playing">

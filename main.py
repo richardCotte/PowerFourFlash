@@ -103,6 +103,11 @@ def power_four():
                            winner=winner)
 
 
+@app.route("/finish_game/", methods=['POST'])
+def finish_game():
+    return request.form['finish_button']
+
+
 @app.route("/")
 def index():
     return "Index Page"
