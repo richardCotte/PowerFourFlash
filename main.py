@@ -177,6 +177,9 @@ def finish_game():
         win = int(dict(rows[0])["win"])
         win += 1
         update_score(win, email)
+    if 'grid' or 'playing_player' in session:
+        session.pop('grid')
+        session.pop('playing_player')
     return redirect(url_for("index"))
 
 
