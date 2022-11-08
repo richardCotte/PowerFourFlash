@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <head>
+        <title>{{ title }}</title>
+    </head>
+    <link rel='stylesheet' type='text/css' media='screen' href='../static/power_four.css'>
+<body>
+    <h1>{{ logo }}</h1>
+<div class="container">
+    <table class="powerFourTable">
+        {% for row in score %}
+        <tr>
+            <td class="powerFourSquare">
+                {{ row["pseudo"] }}
+            </td>
+            <td class="powerFourSquare">
+                {{ row["win"] }}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+  </div>
+</body>
+</html>

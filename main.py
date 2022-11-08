@@ -17,6 +17,16 @@ app = Flask(__name__)
 app.secret_key = "b05c5dafc4a00a8b7548d8fb35e45c1a86553f4f233b15f2d211d1deade97df9"
 
 
+def get_db():
+    db = sqlite3.connect("database.db")
+    db.row_factory = sqlite3.Row
+    return db
+
+
+if not Path("database.db").exists():
+    get_db().executescript(Path("SCRIPT.sql").read_text())
+
+
 @app.route("/sinup_player", methods=["POST", "GET"])
 def sinup_player():
     username = request.form["username"]
@@ -26,29 +36,34 @@ def sinup_player():
         db = get_db()
         cur = db.cursor()
         sqlRequest = (
-            "INSERT INTO player (email, pseudo, pass) VALUES ('"
-            + str(email)
-            + "', '"
-            + str(username)
-            + "', '"
-            + str(password)
-            + "')"
+            "INSERT INTO player (email, pseudo, pass) VALUES ('%s', '%s', '%s')"
+            % (str(email), str(username), str(password))
         )
         cur.execute(sqlRequest)
         db.commit()
         return redirect(url_for("login"))
     else:
-        return "<p>ERROR</p>"
+        return redirect(url_for("error"))
 
 
-def get_db():
-    db = sqlite3.connect("database.db")
-    db.row_factory = sqlite3.Row
-    return db
-
-
-if not Path("database.db").exists():
-    get_db().executescript(Path("SCRIPT.sql").read_text())
+@app.route("/login_player", methods=["POST", "GET"])
+def login_player():
+    email = request.form["email"]
+    password = request.form["password"]
+    if len(email) > 0 and len(password) > 0:
+        db = get_db()
+        cur = db.cursor()
+        sqlRequest = "SELECT * FROM player WHERE email = '%s'" % (str(email))
+        cur.execute(sqlRequest)
+        rows = cur.fetchall()
+        if dict(rows[0])["pass"] == str(password):
+            session["email"] = str(email)
+            session["username"] = str(dict(rows[0])["pseudo"])
+            return redirect(url_for("power_four"))
+        else:
+            return redirect(url_for("error"))
+    else:
+        return redirect(url_for("error"))
 
 
 def calculate_power_four_grid(table, chosen_column, playing_player):
@@ -87,58 +102,38 @@ def power_four():
         playing_player=session["playing_player"],
     )
 
+
+@app.route("/scoreboard")
+def scoreboard():
+    db = get_db()
+    cur = db.cursor()
+    sqlRequest = "SELECT p.pseudo, s.win FROM player p INNER JOIN scoreboard s ON p.email = s.emailPlayer ORDER BY s.win DESC"
+    cur.execute(sqlRequest)
+    rows = cur.fetchall()
+    return render_template(
+        "scoreboard.html", title="Scoreboard", logo="PowerFourFlash", score=rows
+    )
+
+
 @app.route("/")
 @app.route("/index")
 def index():
     name = ""
     return render_template(
-        "index.html",
-        title="Accueil - vous êtes connecté",
-        logo="PowerFourFlash",
-        username=name,
+        "index.html", title="Accueil", logo="PowerFourFlash", username=name
     )
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    error = None
-    if request.method == "POST":
-        if request.form["username"] != "admin" or request.form["password"] != "admin":
-            error = "Identifiants incorrects. Réessayez."
-        else:
-            return redirect(url_for("index"))
-    return render_template("login.html", title="Créer mon compte", error=error)
+    return render_template("login.html", title="Créer mon compte")
 
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    # msg = ""
-    # username = request.form["username"]
-    # email = request.form["email"]
-    # password = request.form["password"]
-    # if(len(username) > 0 and len(email) > 0 and len(password) > 0):
-    # db = get_db()
-    # sqlRequest = "INSERT INTO %s VALUES ('%s', '%s', '%s')" % (email, username, password)
-    # db.execute(sqlRequest)
-    # if (
-    # request.method == "POST"
-    # and "username" in request.form[""]
-    # and "password" in request.form[""]
-    # and "email" in request.form[""]
-    # ):
-    # username = request.form["username"]
-    # password = request.form["password"]
-    # email = request.form["email"]
     return render_template("signup.html", title="Créer mon compte")
 
 
-@app.route("/user/<username>")
-def profile(username):
-    return f"{username}'s profile"
-
-
-with app.test_request_context():
-    print(url_for("profile", username="John Doe"))
-    print(url_for("index"))
-    print(url_for("login"))
-    print(url_for("signup"))
+@app.route("/error")
+def error():
+    return render_template("error.html", title="ERROR")

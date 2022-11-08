@@ -3,28 +3,21 @@
 
 <head>
     <title>{{ title }}</title>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='../static/main.css'>
 </head>
 
 <body>
     <h1>{{ logo }}</h1>
     <div class="container">
-        <form action="" method="post">
+        <form action="{{ url_for('login_player') }}" method="post">
             <label for="username"><b>E-mail</b></label>
-            <input type="text" placeholder="Votre adresse email" name="username" required value="{{
-                request.form.username }}">
-
+            <input type="text" placeholder="Votre adresse email" name="email" required>
             <label for="password"><b>Mot de passe</b></label>
-            <input type="password" placeholder="Votre mot de passe" name="password" required value="{{
-                request.form.password }}">
-
-            <button class="registerbtn" type="submit">Connexion</button value="Login">
+            <input type="password" placeholder="Votre mot de passe" name="password" required>
+            <button class="registerbtn" type="submit">Connexion</button>
         </form>
     </div>
     <a href="{{ url_for('signup') }}">Vous n'avez pas de compte ?</a>
-    {% if error %}
-    <p class="error"><strong>Erreur:</strong> {{ error }}
-  {% endif %}
 </body>
 
 </html>
