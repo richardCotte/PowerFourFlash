@@ -51,14 +51,15 @@ def login_player():
     if len(email) > 0 and len(password) > 0:
         db = get_db()
         cur = db.cursor()
-        sql_request = "SELECT * FROM player WHERE email = '%s'" % (str(email))
-        cur.execute(sql_request)
-        rows = cur.fetchall()
-        if dict(rows[0])["pass"] == str(password):
-            session["email"] = email
-            session["username"] = str(dict(rows[0])["pseudo"])
-            return redirect(url_for("power_four"))
-        else:
+        try:
+            sql_request = "SELECT * FROM player WHERE email = '%s'" % (str(email))
+            cur.execute(sql_request)
+            rows = cur.fetchall()
+            if dict(rows[0])["pass"] == str(password):
+                session["email"] = email
+                session["username"] = str(dict(rows[0])["pseudo"])
+                return redirect(url_for("power_four"))
+        except:
             return redirect(url_for("error"))
     else:
         return redirect(url_for("error"))
