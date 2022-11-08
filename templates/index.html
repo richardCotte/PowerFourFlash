@@ -3,15 +3,15 @@
     <title>{{ title }}</title>
 </head>
 <body>
-    <h1>{{ logo }}</h1>
-    <p>Ce site exploite un jeu de Puissance 4, vous permettant de jouer à 2 ou seul contre une IA et de vous comparer
-        aux autres joueurs.</p>
-    {% if username != "": %}
+<h1>{{ logo }}</h1>
+<p>Ce site exploite un jeu de Puissance 4, vous permettant de jouer à 2 ou seul contre une IA et de vous comparer
+    aux autres joueurs.</p>
+{% if username != "": %}
     <h4>Hello {{ username }}</h4>
     <a href="{{ url_for('power_four') }}"><h3>JOUER</h3></a>
-    {% else %}
+{% else %}
     <a href="{{ url_for('login') }}">Connexion</a>
     <a href="{{ url_for('scoreboard') }}">Scoreboard</a>
-    {% endif %}
+{% endif %}
 </body>
 </html>

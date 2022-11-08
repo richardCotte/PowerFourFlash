@@ -12,7 +12,6 @@ from flask import redirect
 from flask import request
 import sqlite3
 
-
 app = Flask(__name__)
 
 app.secret_key = "b05c5dafc4a00a8b7548d8fb35e45c1a86553f4f233b15f2d211d1deade97df9"
@@ -37,8 +36,8 @@ def sinup_player():
         db = get_db()
         cur = db.cursor()
         sqlRequest = (
-            "INSERT INTO player (email, pseudo, pass) VALUES ('%s', '%s', '%s')"
-            % (str(email), str(username), str(password))
+                "INSERT INTO player (email, pseudo, pass) VALUES ('%s', '%s', '%s')"
+                % (str(email), str(username), str(password))
         )
         cur.execute(sqlRequest)
         db.commit()
@@ -161,18 +160,19 @@ def power_four():
 def update_score(win, email):
     db = get_db()
     cur = db.cursor()
-    sqlRequest = "UPDATE scoreboard SET win = %s WHERE emailPlayer = '%s'" % (int(win), str(email))
-    cur.execute(sqlRequest)
+    sql_request = "UPDATE scoreboard SET win = %s WHERE emailPlayer = '%s'" % (int(win), str(email))
+    cur.execute(sql_request)
+
 
 @app.route("/finish_game/", methods=['POST'])
 def finish_game():
-    typeWinner = str(request.form['finish_button'])
-    if typeWinner == '1':
+    type_winner = str(request.form['finish_button'])
+    if type_winner == '1':
         email = session["email"]
         db = get_db()
         cur = db.cursor()
-        sqlRequest = "SELECT win FROM scoreboard WHERE emailPlayer = '%s'" % (str(email))
-        cur.execute(sqlRequest)
+        sql_request = "SELECT win FROM scoreboard WHERE emailPlayer = '%s'" % (str(email))
+        cur.execute(sql_request)
         rows = cur.fetchall()
         win = int(dict(rows[0])["win"])
         win += 1
@@ -184,8 +184,8 @@ def finish_game():
 def scoreboard():
     db = get_db()
     cur = db.cursor()
-    sqlRequest = "SELECT p.pseudo, s.win FROM player p INNER JOIN scoreboard s ON p.email = s.emailPlayer ORDER BY s.win DESC"
-    cur.execute(sqlRequest)
+    sql_request = "SELECT p.pseudo, s.win FROM player p INNER JOIN scoreboard s ON p.email = s.emailPlayer ORDER BY s.win DESC"
+    cur.execute(sql_request)
     rows = cur.fetchall()
     return render_template(
         "scoreboard.html", title="Scoreboard", logo="PowerFourFlash", score=rows

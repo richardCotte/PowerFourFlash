@@ -1,11 +1,13 @@
-CREATE TABLE player (
-    email TEXT PRIMARY KEY,
+CREATE TABLE player
+(
+    email  TEXT PRIMARY KEY,
     pseudo TEXT,
-    pass TEXT
+    pass   TEXT
 );
 
-CREATE TABLE scoreboard(
+CREATE TABLE scoreboard
+(
     emailPlayer TEXT PRIMARY KEY,
-    win INTEGER,
+    win         INTEGER,
     FOREIGN KEY (emailPlayer) REFERENCES player (email)
 );

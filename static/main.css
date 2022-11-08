@@ -1,7 +1,9 @@
 .container {
     padding: 16px;
-    
-  }.registerbtn {
+
+}
+
+.registerbtn {
     background-color: #04AA6D;
     color: white;
     padding: 16px 20px;
@@ -10,4 +12,4 @@
     cursor: pointer;
     width: 100%;
     opacity: 0.9;
-  }
+}
