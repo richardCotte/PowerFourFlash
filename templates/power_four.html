@@ -6,47 +6,84 @@
     <link href="../static/power_four.css" rel="stylesheet">
 </head>
 <body>
+{% set player1Mark = "🔴" %}
+{% set player2Mark = "🔵" %}
 <table class="powerFourTable">
-{% for line in grid|reverse %}
-    <tr>
-    {% for char in line %}
-        <td class="powerFourSquare">
-        {% if char != "." %}
-            {{ char }}
-        {% else %}
-            {{ " " }}
-        {% endif %}
-        </td>
+    {% for line in grid|reverse %}
+        <tr>
+            {% for char in line %}
+                <td class="powerFourSquare">
+                    {% if char != "." %}
+                        {% if char == 1 %}
+                            {{ player1Mark }}
+                        {% elif char == 2 %}
+                            {{ player2Mark }}
+                        {% endif %}
+                    {% else %}
+                        {{ " " }}
+                    {% endif %}
+                </td>
+            {% endfor %}
+        </tr>
     {% endfor %}
-    </tr>
-{% endfor %}
 </table>
+{% if winner != 0 %}
+    <h1>
+        Le joueur
+        {% if winner == 1 %}
+            {{ player1Mark }}
+        {% elif winner == 2 %}
+            {{ player2Mark }}
+        {% endif %}
+        à gagné
+    </h1>
+    <form action="{{ url_for('finish_game') }}" method="post" name="finish_game">
+        <button type="submit" name="finish_button" value={{ winner }}>End The Game</button>
+    </form>
+{% endif %}
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         <ul>
-        {% for message in messages %}
-            <li class="error">{{ message }}</li>
-        {% endfor %}
+            {% for message in messages %}
+                <li class="error">{{ message }}</li>
+            {% endfor %}
         </ul>
     {% endif %}
 {% endwith %}
-<h2>
-    C'est au joueur :
-</h2>
-{{ playing_player }}
-<label for="col_choice">
+{% if winner == 0 %}
     <h2>
-        Choisissez la colonne dans laquelle vous voulez rajouter votre pion :
+        C'est au joueur :
     </h2>
-</label>
-<form action="{{ url_for('power_four') }}" method="post">
-    <input type="submit" name="chosen_grid" value="0">
-    <input type="submit" name="chosen_grid" value="1">
-    <input type="submit" name="chosen_grid" value="2">
-    <input type="submit" name="chosen_grid" value="3">
-    <input type="submit" name="chosen_grid" value="4">
-    <input type="submit" name="chosen_grid" value="5">
-    <input type="submit" name="chosen_grid" value="6">
-</form>
+    {% if playing_player == 1 %}
+        {{ player1Mark }}
+    {% elif playing_player == 2 %}
+        {{ player2Mark }}
+    {% endif %}
+    {% if playing_player == 1 %}
+        <label for="col_choice">
+            <h2>
+                Choisissez la colonne dans laquelle vous voulez rajouter votre pion :
+            </h2>
+        </label>
+        <form action="{{ url_for('power_four') }}" method="post" name="col_choice">
+            <button type="submit" name="chosen_grid" value="0">1</button>
+            <button type="submit" name="chosen_grid" value="1">2</button>
+            <button type="submit" name="chosen_grid" value="2">3</button>
+            <button type="submit" name="chosen_grid" value="3">4</button>
+            <button type="submit" name="chosen_grid" value="4">5</button>
+            <button type="submit" name="chosen_grid" value="5">6</button>
+            <button type="submit" name="chosen_grid" value="6">7</button>
+        </form>
+    {% elif playing_player == 2 %}
+        <label for="ia_playing">
+            <h2>
+                C'est à l'ia de jouer, appuyer sur le bouton pour la faire jouer :
+            </h2>
+        </label>
+        <form action="{{ url_for('power_four') }}" method="post" name="col_choice">
+            <input type="submit" name="chosen_grid" value="IA Play">
+        </form>
+    {% endif %}
+{% endif %}
 </body>
 </html>
