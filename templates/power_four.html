@@ -56,20 +56,31 @@
     {% elif playing_player == 2 %}
         {{ player2Mark }}
     {% endif %}
-    <label for="col_choice">
-        <h2>
-            Choisissez la colonne dans laquelle vous voulez rajouter votre pion :
-        </h2>
-    </label>
-    <form action="{{ url_for('power_four') }}" method="post">
-        <input type="submit" name="chosen_grid" value="0">
-        <input type="submit" name="chosen_grid" value="1">
-        <input type="submit" name="chosen_grid" value="2">
-        <input type="submit" name="chosen_grid" value="3">
-        <input type="submit" name="chosen_grid" value="4">
-        <input type="submit" name="chosen_grid" value="5">
-        <input type="submit" name="chosen_grid" value="6">
+    {% if playing_player == 1 %}
+        <label for="col_choice">
+            <h2>
+                Choisissez la colonne dans laquelle vous voulez rajouter votre pion :
+            </h2>
+        </label>
+        <form action="{{ url_for('power_four') }}" method="post" name="col_choice">
+            <input type="submit" name="chosen_grid" value="0">
+            <input type="submit" name="chosen_grid" value="1">
+            <input type="submit" name="chosen_grid" value="2">
+            <input type="submit" name="chosen_grid" value="3">
+            <input type="submit" name="chosen_grid" value="4">
+            <input type="submit" name="chosen_grid" value="5">
+            <input type="submit" name="chosen_grid" value="6">
+        </form>
+    {% elif playing_player == 2 %}
+        <label for="ia_playing">
+            <h2>
+                C'est à l'ia de jouer, appuyer sur le bouton pour la faire jouer :
+            </h2>
+        </label>
+        <form action="{{ url_for('power_four') }}" method="post" name="col_choice">
+            <input type="submit" name="chosen_grid" value="IA Play">
+        </form>
+    {% endif %}
 {% endif %}
-</form>
 </body>
 </html>

@@ -1,3 +1,5 @@
+import random
+
 from flask import Flask, redirect
 from flask import url_for
 from flask import flash
@@ -87,7 +89,7 @@ def power_four():
         session['grid'] = [["."] * 7 for i in range(6)]
         session['playing_player'] = 1
     if request.method == 'POST':
-        chosen_grid = request.form['chosen_grid']
+        chosen_grid = request.form['chosen_grid'] if session['playing_player'] == 1 else random.randint(0, 6)
         if calculate_power_four_grid(session['grid'], int(chosen_grid), session['playing_player']):
             session['playing_player'] = 1 if session['playing_player'] == 2 else 2
 
