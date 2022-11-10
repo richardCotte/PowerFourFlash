@@ -70,6 +70,11 @@ def login_player():
         return redirect(url_for("error"))
 
 
+@app.route("/deconnection")
+def deconnection():
+    session.clear()
+    return redirect(url_for("index"))
+
 def calculate_power_four_grid(table, chosen_column, playing_player):
     if 6 >= chosen_column >= 0:
         for line in table:
