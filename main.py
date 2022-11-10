@@ -30,21 +30,24 @@ def sinup_player():
     email = request.form["email"]
     password = request.form["password"]
     if len(username) > 0 and len(email) > 0 and len(password) > 0:
-        db = get_db()
-        cur = db.cursor()
-        sql_request = (
-            "INSERT INTO player (email, pseudo, pass) VALUES ('%s', '%s', '%s')"
-            % (str(email), str(username), str(password))
-        )
-        cur.execute(sql_request)
-        db.commit()
-        sql_request = "INSERT INTO scoreboard (emailPlayer, win) VALUES ('%s', %s)" % (
-            str(email),
-            0,
-        )
-        cur.execute(sql_request)
-        db.commit()
-        return redirect(url_for("login"))
+        try:
+            db = get_db()
+            cur = db.cursor()
+            sql_request = (
+                "INSERT INTO player (email, pseudo, pass) VALUES ('%s', '%s', '%s')"
+                % (str(email), str(username), str(password))
+            )
+            cur.execute(sql_request)
+            db.commit()
+            sql_request = "INSERT INTO scoreboard (emailPlayer, win) VALUES ('%s', %s)" % (
+                str(email),
+                0,
+            )
+            cur.execute(sql_request)
+            db.commit()
+            return redirect(url_for("login"))
+        except:
+            return redirect(url_for("error"))
     else:
         return redirect(url_for("error"))
 
