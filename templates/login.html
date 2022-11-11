@@ -3,28 +3,34 @@
 
 <head>
     <title>{{ title }}</title>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel='stylesheet' type='text/css' media='screen' href='/static/main.css'>
 </head>
 
 <body>
-    <h1>{{ logo }}</h1>
-    <div class="container">
-        <form action="" method="post">
-            <label for="username"><b>E-mail</b></label>
-            <input type="text" placeholder="Votre adresse email" name="username" required value="{{
-                request.form.username }}">
-
-            <label for="password"><b>Mot de passe</b></label>
-            <input type="password" placeholder="Votre mot de passe" name="password" required value="{{
+        <div class="container is-max-desktop">
+            <div class="content is-medium">
+                <h1>{{ logo }}</h1>
+                <form action="" method="post">
+                    <label for="email"><b>E-mail</b></label>
+                    <input type="text" placeholder="Votre adresse email" name="email" required value="{{
+                request.form.email }}">
+                    <br>
+                    <label for="password"><b>Mot de passe</b></label>
+                    <input type="password" placeholder="Votre mot de passe" name="password" required value="{{
                 request.form.password }}">
-
-            <button class="registerbtn" type="submit">Connexion</button value="Login">
-        </form>
-    </div>
-    <a href="{{ url_for('signup') }}">Vous n'avez pas de compte ?</a>
+                    <br>
+            </div>
+            <div class="column is-half">
+                <button class="button is-success" type="submit">Connexion</button value="Login">
+            </div>
+            </form>
+            <br>
+            <a href="{{ url_for('signup') }}">Vous n'avez pas de compte ?</a>
+        </div>
     {% if error %}
     <p class="error"><strong>Erreur:</strong> {{ error }}
-  {% endif %}
+        {% endif %}
 </body>
 
 </html>

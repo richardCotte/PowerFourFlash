@@ -2,18 +2,25 @@
 
 <head>
     <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel='stylesheet' type='text/css' media='screen' href='/static/main.css'>
 </head>
 
 <body>
-    <h1>{{ logo }}</h1>
-    <p>Ce site exploite un jeu de Puissance 4, vous permettant de jouer à 2 ou seul contre une IA et de vous comparer
-        aux autres joueurs.</p>
-    {% if username == "": %}
-    <h4>Hello {{ username }}</h4>
-    <h3>JOUER</h3>
-    {% else %}
-    <a href="{{ url_for('login') }}">Connexion</a>
-    {% endif %}
+    <div class="container is-max-desktop">
+        <div class="content is-medium">
+            <h1>{{ logo }}</h1>
+            <p>Ce site exploite un jeu de Puissance 4, vous permettant de jouer à 2 ou seul contre une IA et de vous
+                comparer
+                aux autres joueurs.</p>
+            {% if username == "": %}
+            <h4>Hello {{ username }}</h4>
+            <h3>JOUER</h3>
+            {% else %}
+            <a class="button is-large" href="{{ url_for('login') }}">Connexion</a>
+            {% endif %}
+        </div>
+    </div>
 </body>
 
 </html>

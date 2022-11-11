@@ -1,7 +1,7 @@
 CREATE TABLE players (
     email TEXT PRIMARY KEY NOT NULL,
-    nickname TEXT NOT NULL,
-    pswd TEXT NOT NULL
+    username TEXT NOT NULL,
+    password TEXT NOT NULL
 );
 
 CREATE TABLE scoreboard(

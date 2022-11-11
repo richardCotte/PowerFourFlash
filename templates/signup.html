@@ -1,22 +1,35 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
     <head>
         <title>{{ title }}</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <link rel='stylesheet' type='text/css' media='screen' href='/static/main.css'>
     </head>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+
 <body>
-    <h1>{{ logo }}</h1>
-<div class="container">
-    <label for="nickname"><b>Pseudo</b></label>
-        <input type="text" placeholder="Votre pseudo" name="nickname" required>
-    <label for="email"><b>E-mail</b></label>
-    <input type="text" placeholder="Votre adresse email" name="email" required>
+    <div class="columns is-centered">
+        <div class="container is-max-desktop">
+            <div class="content is-medium">
+                <h1>{{ logo }}</h1>
+                <label for="username"><b>Pseudo</b></label>
+                <input type="text" placeholder="Votre pseudo" name="username" required>
+                <br>
+                <label for="email"><b>E-mail</b></label>
+                <input type="text" placeholder="Votre adresse email" name="email" required>
+                <br>
+                <label for="password"><b>Mot de passe</b></label>
+                <input type="password" placeholder="Votre mot de passe" name="password" required>
+                <br>
+                <div class="column is-half">
+                    <button class="button is-success" type="submit">S'enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <label for="password"><b>Mot de passe</b></label>
-    <input type="password" placeholder="Votre mot de passe" name="password" required>
-
-    <button class="registerbtn" type="submit">S'enregistrer</button>
-  </div>
 </body>
+
 </html>
